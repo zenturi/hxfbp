@@ -71,7 +71,6 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
                                         }
                                         case _: throw 'expected component at ${this.curPos()}';
                                     }
-                                    trace(comp);
                                 }
                                 
                             }

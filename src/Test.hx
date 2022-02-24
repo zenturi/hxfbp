@@ -1,4 +1,4 @@
-import fbp.grammar.FBPParser;
+import fbp.FBP;
 
 
 class Test {
@@ -14,15 +14,11 @@ Read(ReadFile) OUT -> IN Process(Output)
 'pattern1' -> IN[0] Router(router)
 Demo OUT -> IN Process RESULT -> INPUT Visualize DISPLAY -> IN Console LOG -> IN D1
 ";
-    
-       final parser = new FBPParser(byte.ByteData.ofString(graphExportedInPort));
-       final ast = [];
-       var current = parser.parseFBP();
-       while(current != Eof){
-           ast.push(current);
-           current = parser.parseFBP();
-       }
 
-       trace(ast);
+        
+    
+       final graph = FBP.load(graphExportedInPort, {caseSensitive: false});
+       
+       trace(graph.toJSON());
 	}
 }

@@ -2,6 +2,7 @@
 
 -m Test
 
+-D no-deprecation-warnings
 -D js-es=6
 -L hxparse
 -L ZenFlo
