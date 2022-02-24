@@ -1,0 +1,27 @@
+-cp src/
+
+-m Test
+
+-D js-es=6
+-L hxparse
+-L ZenFlo
+-L hx3compat
+-L RxHaxe
+-L tink_core
+-L polygonal-ds
+
+-L cloner
+-L sneaker
+
+-L equals
+
+-L buddy
+-L hscript
+
+--interp
+
+# --js bin/fbp.js 
+
+# -L hxnodejs
+
+# --cmd node bin/fbp.js

@@ -1,0 +1,3 @@
+# @install: lix --silent download "gh://github.com/deathbeam/parsihax#74f2ac81ccd07d26278433c36f13172173ab6860" into parsihax/2.0.2/github/74f2ac81ccd07d26278433c36f13172173ab6860
+-cp ${HAXE_LIBCACHE}/parsihax/2.0.2/github/74f2ac81ccd07d26278433c36f13172173ab6860/src/
+-D parsihax=2.0.2

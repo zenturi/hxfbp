@@ -1,0 +1,14 @@
+{
+  "name": "fbp",
+  "url" : "https://github.com/YOUR_NAME/fbp/",
+  "license": "MIT",
+  "tags": ["haxe","js"],
+  "description": "description of fbp",
+  "classPath": "src",
+  "version": "0.0.1",
+  "releasenote": "Initial release",
+  "contributors": ["YOUR_NAME"],
+  "dependencies": {
+
+  }
+}
