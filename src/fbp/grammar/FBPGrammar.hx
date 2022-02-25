@@ -84,7 +84,7 @@ class FBPLexer extends hxparse.Lexer implements hxparse.RuleBuilder {
         },
         "#" => THash,
         "#[^\n\r]*" => TDoc(lexer.current.trim()),
-        "\\(([a-zA-Z/_0-9]+)" =>{
+        "\\(([a-zA-Z/._0-9]+)" =>{
             return TCompName(lexer.current.replace("(", "").replace(")", "").trim());
         },
         ":[a-zA-Z/=_,0-9]+" =>{
