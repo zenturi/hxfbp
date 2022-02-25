@@ -1,5 +1,6 @@
 package fbp.grammar;
 
+import zenflo.graph.GraphNodeMetadata;
 import fbp.grammar.FBPGrammar.TPort;
 import fbp.grammar.FBPGrammar.Token;
 import fbp.grammar.FBPGrammar.FBPLexer;
@@ -57,30 +58,38 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
                 switch stream {
                     case [TShortSpace, TArrow, p = port()]:{
                         var comp = bridge();
+                        var pprev = p;
+                        final connections = [];
+                        var lastone:Nodes = null;
+
                         while(true){
+                            // trace(this.peek(0), this.peek(1), this.peek(3), this.peek(4), this.peek(5));
+                            switch(this.peek(0)){ 
+                                case TNewLine: break;
+                                case TEof: break;
+                                case _:
+                            }
+                            
                             switch stream {
                                 case [TShortSpace,TArrow,  p = port(), TShortSpace]:{
                                     switch stream{
                                         case [comp1 = component()]:{
                                             switch stream {
                                                 case [p1 = port()]:{
-                                                    comp = Connection(comp, MiddLet(Port(p.name, p.index), comp1, Port(p1.name, p1.index)));
+                                                    lastone = Outport(comp1, Port(p1.name, p1.index));
+                                                    connections.push(Connection(Outport(comp, Port(pprev.name, pprev.index)), Inport(Port(p.name, p.index), comp1))); //Connection(comp, MiddLet(Port(p.name, p.index), comp1, Port(p1.name, p1.index)));
                                                 }
-                                                case _: comp = Connection(comp, Inport(Port(p.name, p.index), comp1));
+                                                case _: {
+                                                    connections.push(Connection(lastone, Inport(Port(p.name, p.index), comp1)));
+                                                }
                                             }
                                         }
                                         case _: throw 'expected component at ${this.curPos()}';
                                     }
                                 }
-                                
-                            }
-                            switch(this.peek(0)){ 
-                                case TNewLine: break;
-                                case TEof: break;
-                                case _:
                             }
                         }
-                        return  Connection(b1, Inport(Port(p.name, p.index), comp));
+                        return  Connection(b1, Inport(Port(p.name, p.index), comp), connections);
                     }
                 }
                 
@@ -132,7 +141,7 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
                     case [TBrOpen, compname = parseOptional(()-> parse(switch stream {case [TNode(node, x)]: TNode(node, x);})), meta = parseOptional(compMeta), TBrClose]:{
                         final comp = (compname != null) ? switch compname {
                             case TNode(n, x):{
-                                Component(n, [meta]);
+                                Component(n, meta);
                             }
                             case _: null;
                         }: null;
@@ -144,10 +153,17 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
         });
     }
 
-    function compMeta(){
+    function compMeta():GraphNodeMetadata{
         return parse(switch stream{
-            case [TCol, TNode(node, _)]:{
-                return node;
+            case [TCol, TCompMeta(node)]:{
+                final datas = node.split(",");
+                final metadata:GraphNodeMetadata = {};
+                for(s in datas){
+                    final kv = s.split("=");
+                    metadata.set(kv[0], kv[1]);
+                }
+                
+                return metadata;
             }
         });
     }

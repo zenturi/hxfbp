@@ -1,5 +1,6 @@
 package fbp.grammar;
 
+import zenflo.graph.GraphNodeMetadata;
 import hxparse.Parser.parse as parse;
 
 using StringTools;
@@ -41,8 +42,8 @@ enum Nodes {
     MiddLet(inport:Nodes, component:Nodes, outport:Nodes);
     Inport(port:Nodes, node:Nodes);
     Outport(node:Nodes, port:Nodes);
-    Connection(inport:Nodes, outport:Nodes);
-    Component(name:String, meta:Array<String>);
+    Connection(inport:Nodes, outport:Nodes,  ?edges:Array<Nodes>);
+    Component(name:String, meta:GraphNodeMetadata);
     Node(name:String, component:Nodes);
     OUTPORT(node:String, port:TPort, as:String);
     INPORT(node:String, port:TPort, as:String);
@@ -82,7 +83,10 @@ class FBPLexer extends hxparse.Lexer implements hxparse.RuleBuilder {
         },
         "#" => THash,
         "#[^\n\r]*" => TDoc(lexer.current.trim()),
-        "[a-zA-Z/=_][a-zA-Z.0-9_\\-]*" => {
+        "[a-zA-Z/=_,][a-zA-Z.0-9_\\-]*" => {
+            if(lexer.current.contains(",") && lexer.current.contains("=") && !lexer.current.contains(".")){
+                return TCompMeta(lexer.current);
+            }
             if(lexer.current.contains("-") && !lexer.current.contains(".")){
                return TNode(lexer.current, null);
             }
