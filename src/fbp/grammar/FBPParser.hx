@@ -55,6 +55,7 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
                 return INPORT(node, {name: portName, index: id}, port2 != null ? port2.name : null);
             }
             case [b1 = bridge()]:{
+                
                 switch stream {
                     case [TShortSpace, TArrow, p = port()]:{
                         var comp = bridge();
@@ -138,14 +139,8 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
         return parse(switch stream{
             case [TNode(node, _)]:{
                 switch stream {
-                    case [TBrOpen, compname = parseOptional(()-> parse(switch stream {case [TNode(node, x)]: TNode(node, x);})), meta = parseOptional(compMeta), TBrClose]:{
-                        final comp = (compname != null) ? switch compname {
-                            case TNode(n, x):{
-                                Component(n, meta);
-                            }
-                            case _: null;
-                        }: null;
-                        return Node(node, comp);
+                    case [TCompName(compname), meta = parseOptional(compMeta), TBrClose]:{
+                        return Node(node, Component(compname, meta));
                     }
                     case _: return Node(node, null);
                 }
@@ -153,9 +148,12 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
         });
     }
 
+    function parseCompName(){
+        return parse(switch stream {case [TCompName(node)]: TCompName(node);});
+    }
     function compMeta():GraphNodeMetadata{
         return parse(switch stream{
-            case [TCol, TCompMeta(node)]:{
+            case [TCompMeta(node)]:{
                 final datas = node.split(",");
                 final metadata:GraphNodeMetadata = {};
                 for(s in datas){
@@ -177,7 +175,7 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
                 } : null; 
                 return {name: pname, index: id};
             }
-			case [TCol, TNode(name, _), index = parseOptional(getPortIndex)]: {
+			case [TCompMeta(name), index = parseOptional(getPortIndex)]: {
                 final id = index != null ? switch index {
                     case TIndex(id): id;
                     case _: null;

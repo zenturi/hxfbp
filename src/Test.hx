@@ -8,7 +8,10 @@ class Test {
 INPORT=Read.IN:FILENAME 
 INPORT=Read.OPTIONS:CONFIG 
 OUTPORT=Process.OUT:RESULT 
-Read(ReadFile) OUT -> IN Process(Output) RESULT -> IN Visualize Display -> IN D1
+Read(ReadFile) OUT -> IN Process(Output:key=value)
+
+'5s' -> INTERVAL Ticker(core/ticker) OUT -> IN Forward(core/passthru)
+Forward OUT -> IN Log(core/console)
 ";
 
        final graph = FBP.load(graphExportedInPort, {caseSensitive: false});

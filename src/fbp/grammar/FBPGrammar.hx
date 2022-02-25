@@ -29,6 +29,7 @@ enum Token {
     TNewLine;
     TArrow;
     TCompMeta(val:String);
+    TCompName(val:String);
 }
 
 
@@ -83,10 +84,13 @@ class FBPLexer extends hxparse.Lexer implements hxparse.RuleBuilder {
         },
         "#" => THash,
         "#[^\n\r]*" => TDoc(lexer.current.trim()),
-        "[a-zA-Z/=_,][a-zA-Z.0-9_\\-]*" => {
-            if(lexer.current.contains(",") && lexer.current.contains("=") && !lexer.current.contains(".")){
-                return TCompMeta(lexer.current);
-            }
+        "\\(([a-zA-Z/_0-9]+)" =>{
+            return TCompName(lexer.current.replace("(", "").replace(")", "").trim());
+        },
+        ":[a-zA-Z/=_,0-9]+" =>{
+            return TCompMeta(lexer.current.replace(":", "").trim());
+        },
+        "[a-zA-Z_][a-zA-Z.0-9_\\-]*" => {
             if(lexer.current.contains("-") && !lexer.current.contains(".")){
                return TNode(lexer.current, null);
             }
@@ -97,7 +101,7 @@ class FBPLexer extends hxparse.Lexer implements hxparse.RuleBuilder {
             TNode(s[0], s[1]);
         },
         // "\\." => TDot,
-        "\\(" => TBrOpen,
+        // "\\(" => TBrOpen,
 		"\\)" => TBrClose,
         "[0-9]+" =>  TIndex(Std.parseInt(lexer.current)),
         'INPORT=' => TInport,

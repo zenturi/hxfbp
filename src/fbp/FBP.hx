@@ -1,5 +1,6 @@
 package fbp;
 
+import zenflo.graph.GraphIIP;
 import zenflo.graph.GraphNodeID;
 import zenflo.graph.GraphEdge;
 import zenflo.graph.GraphNodeMetadata;
@@ -39,7 +40,7 @@ class FBP {
 				case Connection(var _inport, var _outport, edges):
 					{
 						registerEdges(_inport, _outport);
-						
+
 						procesesConnections(edges);
 					}
 				case _:
@@ -94,7 +95,8 @@ class FBP {
 		final from:{?node:GraphNodeID, ?port:String, ?index:Int} = {};
 		final to:{?node:GraphNodeID, ?port:String, ?index:Int} = {};
 
-		final edge:GraphEdge =  {from: from, to: to};
+		final edge:GraphEdge = {from: from, to: to};
+		final initializer:GraphIIP = {};
 
 		function makePort(node:Nodes, port:Nodes, isIn = false) {
 			var p = port.getParameters();
@@ -111,65 +113,96 @@ class FBP {
 						}
 						graph.addNode(nodeName, comp, meta);
 					}
-				case Outport(var node, var port):{
-					var _node = node.getParameters();
-					p = !isIn ? port.getParameters() : p;
-					nodeName = options.caseSensitive ? _node[0] : _node[0].toLowerCase();
-					var comp = null, meta:GraphNodeMetadata = null;
-					final component:Nodes = _node[1];
-					if (component != null) {
-						final c:Array<Dynamic> = component.getParameters();
-						comp = options.caseSensitive ? c[0] : c[0].toLowerCase();
-						meta = c[1];
-					}
+				case Outport(var node, var port):
+					{
+						var _node = node.getParameters();
+						p = !isIn ? port.getParameters() : p;
+						nodeName = options.caseSensitive ? _node[0] : _node[0].toLowerCase();
+						var comp = null, meta:GraphNodeMetadata = null;
+						final component:Nodes = _node[1];
+						if (component != null) {
+							final c:Array<Dynamic> = component.getParameters();
+							comp = options.caseSensitive ? c[0] : c[0].toLowerCase();
+							meta = c[1];
+						}
 
-					graph.addNode(nodeName, comp, meta);
-				}
+						graph.addNode(nodeName, comp, meta);
+					}
 				case _:
 					trace(node);
 			}
 
-			if(isIn){
-				edge.to = {
-					node: nodeName,
-					port: p[0],
-					index: p[1]
-				};
+			final _port = options.caseSensitive ? p[0] : p[0].toLowerCase();
+			final _index = p[1];
+
+			if (isIn) {
+				if(initializer.from == null){
+					edge.to = {
+						node: nodeName,
+						port: _port,
+						index: _index
+					};
+				} else {
+					initializer.to = {
+						node: nodeName,
+						port: _port,
+						index: _index
+					}
+				}
+				
 			} else {
 				edge.from = {
 					node: nodeName,
-					port: p[0],
-					index: p[1]
+					port: _port,
+					index: _index
 				};
 			}
 
 			return edge;
 		}
 
-		switch left {
-			case Outport(var node, var port):
-				{
-					makePort(node, port);
-					
-				}
-			case _: trace(left);
+		if(left != null){
+			switch left {
+				case Outport(var node, var port):
+					{
+						makePort(node, port);
+					}
+				case IIP(data):
+					{
+						initializer.from = {
+							data: data
+						};
+					}
+				case _:
+					trace(left);
+			}
 		}
-
-		switch right {
-			case Inport(var port, var node):
-				{
-					makePort(node, port, true);
-					
-				}
-			case _: trace(left);
+		
+		if(right != null){
+			switch right {
+				case Inport(var port, var node):
+					{
+						
+	
+						makePort(node, port, true);
+						
+					}
+				case _:
+					trace(right);
+			}
 		}
-
+		
+		
 		graph.edges.push(edge);
+		if(initializer.from != null){
+			graph.initializers.push(initializer);
+		}
+		
 	}
 
 	static function procesesConnections(edges:Null<Array<Nodes>>) {
-		if(edges != null){
-			for(edge in edges){
+		if (edges != null) {
+			for (edge in edges) {
 				var params = edge.getParameters();
 				var _inport = params[0];
 				var _outport = params[1];
