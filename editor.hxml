@@ -5,7 +5,8 @@
 -D no-deprecation-warnings
 -D js-es=6
 -L hxparse
--L ZenFlo
+-L zenflo-emitter
+-L zenflo-graph
 -L hx3compat
 -L RxHaxe
 -L tink_core

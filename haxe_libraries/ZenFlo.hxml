@@ -1,3 +1,0 @@
-# @install: lix --silent download "gh://github.com/zenturi/zenflo#45edcc87f2a3ce26184e92d75b57707e155d4b5e" into ZenFlo/0.0.1/github/45edcc87f2a3ce26184e92d75b57707e155d4b5e
--cp ${HAXE_LIBCACHE}/ZenFlo/0.0.1/github/45edcc87f2a3ce26184e92d75b57707e155d4b5e/src
--D ZenFlo=0.0.1

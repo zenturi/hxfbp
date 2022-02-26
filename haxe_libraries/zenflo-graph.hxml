@@ -1,0 +1,5 @@
+# @install: lix --silent download "haxelib:/zenflo-graph#0.0.3" into zenflo-graph/0.0.3/haxelib
+-lib tink_core
+-lib zenflo-emitter
+-cp ${HAXE_LIBCACHE}/zenflo-graph/0.0.3/haxelib/src
+-D zenflo-graph=0.0.3
