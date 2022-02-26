@@ -3,7 +3,7 @@
 The fbp library provides a parser for a domain-specific language for flow-based-programming (FBP), used for defining graphs for FBP programming environments like [ZenFlo](https://github.com/zenturi/zenflo), [NoFlo](https://noflojs.org/), [MicroFlo](https://microflo.org/) and MsgFlo.
 
 ### Dependencies
- * [ZenFlo](https://github.com/zenturi/zenflo)
+ * [zenflo-graph](https://github.com/zenturi/zenflo-graph)
  * [Haxe](https://haxe.org/)
  * [Node.js](https://nodejs.org/)
 
