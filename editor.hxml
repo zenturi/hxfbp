@@ -2,6 +2,7 @@
 
 -m Test
 
+
 -D no-deprecation-warnings
 -D js-es=6
 -L hxparse
@@ -20,9 +21,11 @@
 -L buddy
 -L hscript
 
---interp
+# --interp
 
-# --js bin/fbp.js 
+--hl bin/fbp.hl 
+--cmd hl bin/fbp.hl
+
 
 # -L hxnodejs
 
