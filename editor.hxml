@@ -7,13 +7,11 @@
 -D js-es=6
 -L hxparse
 -L zenflo-emitter
--L zenflo-graph
--L hx3compat
--L RxHaxe
+# -L hx3compat
 -L tink_core
--L polygonal-ds
+# -L polygonal-ds
 
--L cloner
+# -L cloner
 -L sneaker
 
 -L equals
@@ -21,12 +19,15 @@
 -L buddy
 -L hscript
 
-# --interp
+--interp
 
---hl bin/fbp.hl 
---cmd hl bin/fbp.hl
+# --hl bin/fbp.hl 
+# --cmd hl bin/fbp.hl
 
 
 # -L hxnodejs
 
 # --cmd node bin/fbp.js
+
+# --cpp bin/cpp
+# --cmd bin/cpp/Test

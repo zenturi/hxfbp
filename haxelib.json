@@ -5,12 +5,12 @@
     "tags": ["haxe", "js", "fbp", "flow-based-programming"],
     "description": "Parser for the .fbp flow definition language",
     "classPath": "src",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "releasenote": "alpha",
     "contributors": ["darmie"],
     "dependencies": {
-        "zenflo-graph": "",
-        "zenflo-emitter": "",
+        "zenflo-graph": "0.0.5",
+        "zenflo-emitter": "0.0.3",
         "hxparse": "",
         "hscript": ""
     }

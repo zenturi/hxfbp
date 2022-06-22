@@ -1,20 +1,20 @@
 package fbp;
 
-import zenflo.graph.GraphIIP;
-import zenflo.graph.GraphNodeID;
-import zenflo.graph.GraphEdge;
-import zenflo.graph.GraphNodeMetadata;
+import fbp.graph.GraphIIP;
+import fbp.graph.GraphNodeID;
+import fbp.graph.GraphEdge;
+import fbp.graph.GraphNodeMetadata;
 import fbp.grammar.FBPGrammar;
 import fbp.grammar.FBPParser;
-import zenflo.graph.Graph;
+import fbp.graph.Graph;
 
 using haxe.EnumTools;
 
 class FBP {
-	static var options:zenflo.graph.GraphOptions;
+	static var options:fbp.graph.GraphOptions;
 	static var graph:Graph;
 
-	public static function load(source:String, name:String = "", ?opt:Null<zenflo.graph.GraphOptions>):Graph {
+	public static function load(source:String, name:String = "", ?opt:Null<fbp.graph.GraphOptions>):Graph {
 		final parser = new FBPParser(byte.ByteData.ofString(source));
 		graph = new Graph(name, options);
 		options = opt;
@@ -111,7 +111,13 @@ class FBP {
 							comp = options.caseSensitive ? c[0] : c[0].toLowerCase();
 							meta = c[1];
 						}
-						graph.addNode(nodeName, comp, meta);
+						
+						
+						graph.nodes.push({
+							id: nodeName,
+							component: comp,
+							metadata: meta,
+						});
 					}
 				case Outport(var node, var port):
 					{
@@ -126,7 +132,11 @@ class FBP {
 							meta = c[1];
 						}
 
-						graph.addNode(nodeName, comp, meta);
+						graph.nodes.push({
+							id: nodeName,
+							component: comp,
+							metadata: meta,
+						});
 					}
 				case _:
 					trace(node);
@@ -182,8 +192,6 @@ class FBP {
 			switch right {
 				case Inport(var port, var node):
 					{
-						
-	
 						makePort(node, port, true);
 						
 					}

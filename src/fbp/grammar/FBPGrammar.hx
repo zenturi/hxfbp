@@ -1,7 +1,7 @@
 package fbp.grammar;
 
-import zenflo.graph.GraphNodeMetadata;
-import hxparse.Parser.parse as parse;
+import fbp.graph.GraphNodeMetadata;
+// import hxparse.Parser.parse as parse;
 
 using StringTools;
 enum Token {
@@ -53,6 +53,14 @@ enum Nodes {
     IIP(data:String);
     Eof;
 }
+
+// class FBPLexer {
+//      public function new(input:byte.ByteData, sourceName:String) {
+// 		super(input, sourceName);
+// 	}   
+
+
+// }
 
 class FBPLexer extends hxparse.Lexer implements hxparse.RuleBuilder {
     public function new(input:byte.ByteData, sourceName:String) {

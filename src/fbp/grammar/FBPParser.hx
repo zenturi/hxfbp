@@ -1,6 +1,6 @@
 package fbp.grammar;
 
-import zenflo.graph.GraphNodeMetadata;
+import fbp.graph.GraphNodeMetadata;
 import fbp.grammar.FBPGrammar.TPort;
 import fbp.grammar.FBPGrammar.Token;
 import fbp.grammar.FBPGrammar.FBPLexer;
@@ -24,6 +24,7 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
 	}
 
 	function lineParse() {
+        #if !macro
 		return parse(switch stream {
             case [TNewLine]: lineParse();
             case [TEof]: return Eof;
@@ -97,12 +98,15 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
             }
             case [_ = parseRepeat(space)]: lineParse();
         });
+        #end
 	}
 
     function space(){
+        #if !macro
         return parse(switch stream{
             case [TShortSpace]: TShortSpace;
         });
+        #end
     }
 
 
@@ -136,6 +140,7 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
 
 
     function component(){
+        #if !macro
         return parse(switch stream{
             case [TNode(node, _)]:{
                 switch stream {
@@ -146,12 +151,14 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
                 }
             }
         });
+        #end
     }
 
     function parseCompName(){
         return parse(switch stream {case [TCompName(node)]: TCompName(node);});
     }
     function compMeta():GraphNodeMetadata{
+        #if !macro
         return parse(switch stream{
             case [TCompMeta(node)]:{
                 final datas = node.split(",");
@@ -164,9 +171,11 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
                 return metadata;
             }
         });
+        #end
     }
 
 	function port():TPort {
+        #if !macro
 		return parse(switch stream {
             case [TShortSpace, TNode(pname, _), index = parseOptional(getPortIndex)]:{
                 final id = index != null ? switch index {
@@ -191,14 +200,17 @@ class FBPParser extends hxparse.Parser<hxparse.LexerTokenSource<Token>, Token> {
             }
             
 		});
+        #end
 	}
 
 	function getPortIndex() {
+        #if !macro
 		return parse(switch stream {
 			case [TBkOpen, TIndex(id), TBkClose]: {
 					return TIndex(id);
 				}
 		});
+        #end
 	}
 
 	// function linerTerminator(node:Nodes) {

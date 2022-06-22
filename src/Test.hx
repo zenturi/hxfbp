@@ -16,6 +16,7 @@ Forward OUT -> IN Log(core/console)
 
        final graph = FBP.load(graphExportedInPort, {caseSensitive: false});
        
+	//    trace(Json.stringify(graph));
        trace(graph.toJSON());
 	}
 }
